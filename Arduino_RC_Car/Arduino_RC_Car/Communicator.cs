@@ -40,14 +40,22 @@ namespace Arduino_RC_Car
                 else
                 {
                     serialPort.Open();
-                    
                 }
             }
         }
 
         public void SendCommand(string command)
         {
-            serialPort.Write(command);
+            if (serialPort.IsOpen)
+            {
+                serialPort.Write(command);
+                Frm_Main.Message = ""; //needs to be checked
+            }
+            else
+            {
+                Frm_Main.Message = "Port is closed";
+            }
+            
         }
 
         public void SendSetOfBytes(byte[] bytes,int offset, int count)

@@ -22,14 +22,30 @@ namespace Arduino_RC_Car
         public const char right = '4';
         public const char requestData = '5';
 
-        
+        public static string Message { get; set; }
+
+        Radar radar = new Radar();
 
         public Frm_Main()
         {
             InitializeComponent();
             ports.AddRange(SerialPort.GetPortNames());
             cmb_ComPorts.DataSource = ports;
-            port = cmb_ComPorts.SelectedValue.ToString();
+            if(ports.Count != 0) 
+            {
+                port = cmb_ComPorts.SelectedText; //needs to be checked if working
+                lbl_status.Location = new Point((638 / 2) - 75, 59); //so it can be in the middle
+                lbl_status.ForeColor = Color.Red;
+                lbl_status.Text = "Connect to bluetooth";
+            }
+            else
+            {
+                lbl_status.Location = new Point((638 / 2)-55, 59); //so it can be in the middle
+                lbl_status.ForeColor = Color.Red;
+                lbl_status.Text = "Bluetooth is off";
+            }
+
+            pnl_radar.Controls.Add(radar);
         }
 
         Communicator communicator = new Communicator(port, 9600, Parity.None, 8, StopBits.One);
@@ -88,15 +104,22 @@ namespace Arduino_RC_Car
             if (communicator.serialPort.IsOpen)
             {
                 MessageBox.Show("connected");
+                lbl_status.Location = new Point((638 / 2) - 55, 59); //so it can be in the middle
+                lbl_status.ForeColor = Color.FromArgb(0,122,204);
+                lbl_status.Text = "Connected successfully";
+
             }
             
         }
 
         private void btn_refresh_Click(object sender, EventArgs e)
         {
-            communicator.Start();
-            //communicator.SendCommand("5");
-            communicator.serialPort.DataReceived += SerialPort_DataReceived;
+            lbl_status.Text = Message;
+            if (communicator.serialPort.IsOpen)
+            {
+                //communicator.SendCommand("5");
+                communicator.serialPort.DataReceived += SerialPort_DataReceived;
+            }
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -118,7 +141,12 @@ namespace Arduino_RC_Car
         //btn_stop
         private void button1_Click_1(object sender, EventArgs e)
         {
+            
             communicator.SendCommand("0");
+            if (Message == "Port is closed")
+            {
+                MessageBox.Show(Message);
+            }
             communicator.ClosePort();
         }
 
@@ -143,5 +171,6 @@ namespace Arduino_RC_Car
         {
             port = cmb_ComPorts.SelectedValue.ToString();
         }
+
     }
 }

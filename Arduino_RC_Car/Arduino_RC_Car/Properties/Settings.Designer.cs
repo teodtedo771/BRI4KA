@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Ardiono_RC_Car.Properties
+namespace Arduino_RC_Car.Properties
 {
 
 

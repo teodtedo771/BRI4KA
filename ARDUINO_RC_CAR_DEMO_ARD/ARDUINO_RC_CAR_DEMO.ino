@@ -2,7 +2,7 @@
 
 #include <SoftwareSerial.h>
 
-int period = 5000;
+int period = 2000;
 unsigned long time_now = 0;
 int data;
 const int leftFwrd = 5;
@@ -42,6 +42,7 @@ void setup() {
 }
 
 void loop() {
+  //Sound(3);
   // Feed any data from bluetooth to Terminal.
   
   if (Blue.available())
@@ -101,6 +102,15 @@ void Stop() {
   digitalWrite(leftBckwrd, 0);
   digitalWrite(rightBckwrd, 0);
 }
+void Sound(int n)
+{
+  for(int i = 0; i < n; i++)
+  {
+    digitalWrite(zum,1);
+    delay(30);
+    digitalWrite(zum,0);
+  }
+}
 void SendSensorData() {
   String data = "";
   char buff[30];
@@ -119,15 +129,15 @@ void SendSensorData() {
   data += "d\n";
   if(smokeData == 1)
   {
-  data += "no";
+    data += "no";
   }
   else
   {
     data += "yes";
+    
   }
-  
   if (temp != -999.00) {
-    Serial.println(buff);
+    Serial.println(data);
     Blue.println(data);
   }
 }

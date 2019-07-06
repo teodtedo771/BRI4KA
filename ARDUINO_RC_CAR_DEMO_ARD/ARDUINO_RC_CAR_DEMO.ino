@@ -1,6 +1,8 @@
 #include <dht.h>
+
 #include <SoftwareSerial.h>
-int period = 2000;
+
+int period = 5000;
 unsigned long time_now = 0;
 int data;
 const int leftFwrd = 5;
@@ -10,9 +12,11 @@ const int rightBckwrd = 10;
 const int zum = 11;
 const int btn = 12;
 const int led = 13;
-const int trig = 3;
+const int trig = 7;
 const int echo = 8;
 const int dht11 = 2;
+const int photoResistor = A0;
+const int gasSensor = A1;
 
 dht DHT;
 SoftwareSerial Blue(4, 3); // RX | TX
@@ -22,13 +26,23 @@ void setup() {
   Serial.begin(9600);
   Blue.begin(9600); //Default Baud for comm, it may be different for your Module. 
   Serial.println("The bluetooth gates are open.\n Connect to HC-05 from any other bluetooth device with 1234 as pairing key!.");
+  pinMode(leftFwrd, OUTPUT);
+  pinMode(rightFwrd, OUTPUT);
+  pinMode(leftBckwrd, OUTPUT);
+  pinMode(rightBckwrd, OUTPUT);
+  pinMode(zum, OUTPUT);
+  pinMode(btn, INPUT);
+  pinMode(led, OUTPUT);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+  pinMode(dht11, INPUT);
+  pinMode(photoResistor, INPUT);
+  pinMode(gasSensor, INPUT);
+
 }
 
 void loop() {
-  delay(1);
   // Feed any data from bluetooth to Terminal.
-  if(millis() > 500)
-  StartSound();
   
   if (Blue.available())
     data = Blue.read();
@@ -90,32 +104,53 @@ void Stop() {
 void SendSensorData() {
   String data = "";
   char buff[30];
-  
+
   int chk = DHT.read11(dht11);
   float temp = DHT.temperature;
   float humidity = DHT.humidity;
   
+  int smokeData = digitalRead(gasSensor);
+  
   data += humidity;
-  data += "\n";
+  data += "%\n";
   data += temp;
-  data += "\n";
-  data.toCharArray(buff,30);
-  if(temp != -999.00)
+  data += "C\n";
+  data += UltrasonicSensorDistance();
+  data += "d\n";
+  if(smokeData == 1)
   {
-  Serial.println(buff);
-  Blue.write(buff);
+  data += "no";
+  }
+  else
+  {
+    data += "yes";
+  }
+  
+  if (temp != -999.00) {
+    Serial.println(buff);
+    Blue.println(data);
   }
 }
-void StartSound(){
-  digitalWrite(zum,1);
-  delay(40);
-  digitalWrite(zum,0);
-  delay(30);
-  digitalWrite(zum,1);
-  delay(20);
-  digitalWrite(zum,0);
-  delay(10);
-  digitalWrite(zum,1);
-  delay(5);
-  digitalWrite(zum,0);
+int UltrasonicSensorDistance() {
+  long duration;
+  int distance;
+  // Clears the trigPin
+  digitalWrite(trig, 0);
+  delayMicroseconds(2);
+  // Sets the trigPin on HIGH state for 10 micro seconds
+  digitalWrite(trig, 1);
+  delayMicroseconds(10);
+  digitalWrite(trig, 0);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echo, 1);
+  // Calculating the distance
+  distance = duration * 0.034 / 2;
+  // Prints the distance on the Serial Monitor
+
+  if (distance <= 40 && distance >= 0) {
+    return distance;
+  }
+  else{
+    return 0;
+    }
 }

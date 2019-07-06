@@ -14,7 +14,7 @@ namespace Arduino_RC_Car
     public partial class Frm_Main : Form
     {
         List<string> ports = new List<string>();
-        public static string port = "COM7";
+        public static string port = "COM9";
         public const string stop = "0";
         public const string forward = "1";
         public const string backward = "2";

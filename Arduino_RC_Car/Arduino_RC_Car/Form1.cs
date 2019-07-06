@@ -15,16 +15,21 @@ namespace Arduino_RC_Car
     {
         List<string> ports = new List<string>();
         public static string port = "COM7";
-        public const char stop = '0';
-        public const char forward = '1';
-        public const char backward = '2';
-        public const char left = '3';
-        public const char right = '4';
-        public const char requestData = '5';
+        public const string stop = "0";
+        public const string forward = "1";
+        public const string backward = "2";
+        public const string left = "3";
+        public const string right = "4";
+        public const string requestData = "5";
 
         public static string Message { get; set; }
 
+        List<string> sensondata = new List<string>();
+
         Radar radar = new Radar();
+        public string distance = "";
+        public static int Distance{get;set;}
+
 
         public Frm_Main()
         {
@@ -100,14 +105,15 @@ namespace Arduino_RC_Car
         //bluetooth button
         private void button1_Click(object sender, EventArgs e)
         {
+            MessageBox.Show(communicator.serialPort.PortName);
             communicator.Start();
             if (communicator.serialPort.IsOpen)
             {
                 MessageBox.Show("connected");
-                lbl_status.Location = new Point((638 / 2) - 55, 59); //so it can be in the middle
+                lbl_status.Location = new Point((638 / 2) - 75, 59); //so it can be in the middle
                 lbl_status.ForeColor = Color.FromArgb(0,122,204);
                 lbl_status.Text = "Connected successfully";
-
+                tmr_radar.Start();
             }
             
         }
@@ -117,11 +123,62 @@ namespace Arduino_RC_Car
             lbl_status.Text = Message;
             if (communicator.serialPort.IsOpen)
             {
+                int i = 0;
+                while (i <= 5) //1-distance, 2nd - humidity, 3rd - temp
+                {
+                    sensondata.Add(communicator.serialPort.ReadLine());
+                    i++;
+                }
+                //MessageBox.Show(sensondata[sensondata.Count - 3]);
+                //MessageBox.Show(sensondata[sensondata.Count - 2]);
+                //MessageBox.Show(sensondata[sensondata.Count - 1]);
                 //communicator.SendCommand("5");
-                communicator.serialPort.DataReceived += SerialPort_DataReceived;
+                //communicator.serialPort.DataReceived += SerialPort_DataReceived;
+
+                //string distance = "";
+                string temp = "";
+                string humidity = "";
+                for (int j = sensondata.Count-5; j < sensondata.Count-1; j++)
+                {
+                    if (sensondata[j].Contains("C"))
+                    {
+                        temp = sensondata[j]; //in case indexof returns -1
+                        int lastChar = sensondata[j].IndexOf(".");
+                        int lenght = sensondata[j].Count() - (lastChar)-2;
+                        if (lastChar != -1)
+                        {
+                            temp = sensondata[j].Substring(0, lenght);
+                        }
+                        
+                        lbl_tempValue.Text = temp+"C";
+                    }
+                    if (sensondata[j].Contains("%"))
+                    {
+                        humidity = sensondata[j];
+                        int lastChar = sensondata[j].IndexOf(".");
+                        int lenght = sensondata[j].Count() - (lastChar)-2;
+                        if (lastChar != -1)
+                        {
+                            humidity = sensondata[j].Substring(0, lenght);
+                        }
+                        lbl_humidityValue.Text = humidity+"%";
+                    }
+                    if (sensondata[j] == "yes")
+                    {
+                        lbl_gasesValue.Text = "Yes";
+                        lbl_gasesValue.ForeColor = Color.Red;
+                    }
+                    if (sensondata[j] == "no")
+                    {
+                        lbl_gasesValue.Text = "No";
+                        lbl_gasesValue.ForeColor = Color.FromArgb(6,204,6);
+                    }
+                }
+                
             }
         }
 
+        //not needed
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort sp = (SerialPort)sender;
@@ -172,5 +229,77 @@ namespace Arduino_RC_Car
             port = cmb_ComPorts.SelectedValue.ToString();
         }
 
+        private void tmr_radar_Tick(object sender, EventArgs e) //gets the distance
+        {
+            if (communicator.serialPort.IsOpen)
+            {
+                //if(sensondata.Count < 5)
+                //{
+                    int i = 0;
+                    while (i <= 5) //1-distance, 2nd - humidity, 3rd - temp
+                    {
+                        sensondata.Add(communicator.serialPort.ReadLine());
+                        i++;
+                    }
+                //}
+                
+
+                int lastindex;
+                for (int j = sensondata.Count - 5; j < sensondata.Count - 1; j++)
+                {
+                    string unparsedDistance = "";
+
+                    if (sensondata[j].Contains("d"))
+                    {
+
+                        unparsedDistance = sensondata[j];
+                        lastindex = unparsedDistance.IndexOf('d');
+                        Distance = int.Parse(unparsedDistance.Substring(0, lastindex));
+                    }
+
+                }
+            }
+            
+        }
+
+        private void btn_up_MouseUp(object sender, MouseEventArgs e)
+        {
+            communicator.SendCommand(stop);
+        }
+
+        private void btn_up_MouseDown(object sender, MouseEventArgs e)
+        {
+            communicator.SendCommand(forward);
+        }
+
+        private void btn_left_MouseDown(object sender, MouseEventArgs e)
+        {
+            communicator.SendCommand(left);
+        }
+
+        private void btn_left_MouseUp(object sender, MouseEventArgs e)
+        {
+            communicator.SendCommand(stop);
+        }
+
+        private void btn_right_MouseDown(object sender, MouseEventArgs e)
+        {
+            communicator.SendCommand(right);
+        }
+
+        private void btn_right_MouseUp(object sender, MouseEventArgs e)
+        {
+            communicator.SendCommand(stop);
+        }
+
+        private void btn_down_MouseDown(object sender, MouseEventArgs e)
+        {
+            communicator.SendCommand(backward);
+        }
+
+        private void btn_down_MouseUp(object sender, MouseEventArgs e)
+        {
+            communicator.SendCommand(stop);
+        }
     }
 }

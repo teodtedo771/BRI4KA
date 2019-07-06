@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Main));
             this.btn_down = new System.Windows.Forms.Button();
             this.btn_right = new System.Windows.Forms.Button();
@@ -53,6 +54,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.lbl_gasesValue = new System.Windows.Forms.Label();
+            this.tmr_radar = new System.Windows.Forms.Timer(this.components);
+            this.tmr_ = new System.Windows.Forms.Timer(this.components);
             this.pnl_top.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_acceleration)).BeginInit();
             this.SuspendLayout();
@@ -69,6 +72,8 @@
             this.btn_down.TabIndex = 0;
             this.btn_down.UseVisualStyleBackColor = true;
             this.btn_down.Click += new System.EventHandler(this.btn_down_Click);
+            this.btn_down.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btn_down_MouseDown);
+            this.btn_down.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_down_MouseUp);
             // 
             // btn_right
             // 
@@ -82,6 +87,8 @@
             this.btn_right.TabIndex = 1;
             this.btn_right.UseVisualStyleBackColor = true;
             this.btn_right.Click += new System.EventHandler(this.btn_right_Click);
+            this.btn_right.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btn_right_MouseDown);
+            this.btn_right.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_right_MouseUp);
             // 
             // btn_up
             // 
@@ -95,6 +102,8 @@
             this.btn_up.TabIndex = 2;
             this.btn_up.UseVisualStyleBackColor = true;
             this.btn_up.Click += new System.EventHandler(this.btn_up_Click);
+            this.btn_up.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btn_up_MouseDown);
+            this.btn_up.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_up_MouseUp);
             // 
             // btn_left
             // 
@@ -108,6 +117,8 @@
             this.btn_left.TabIndex = 3;
             this.btn_left.UseVisualStyleBackColor = true;
             this.btn_left.Click += new System.EventHandler(this.btn_left_Click);
+            this.btn_left.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btn_left_MouseDown);
+            this.btn_left.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_left_MouseUp);
             // 
             // pnl_top
             // 
@@ -285,18 +296,18 @@
             this.lbl_tempValue.AutoSize = true;
             this.lbl_tempValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbl_tempValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(204)))), ((int)(((byte)(6)))));
-            this.lbl_tempValue.Location = new System.Drawing.Point(78, 503);
+            this.lbl_tempValue.Location = new System.Drawing.Point(74, 502);
             this.lbl_tempValue.Name = "lbl_tempValue";
-            this.lbl_tempValue.Size = new System.Drawing.Size(38, 20);
+            this.lbl_tempValue.Size = new System.Drawing.Size(34, 20);
             this.lbl_tempValue.TabIndex = 16;
-            this.lbl_tempValue.Text = "30 C";
+            this.lbl_tempValue.Text = "30C";
             // 
             // lbl_humidityValue
             // 
             this.lbl_humidityValue.AutoSize = true;
             this.lbl_humidityValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbl_humidityValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(204)))), ((int)(((byte)(6)))));
-            this.lbl_humidityValue.Location = new System.Drawing.Point(106, 529);
+            this.lbl_humidityValue.Location = new System.Drawing.Point(103, 531);
             this.lbl_humidityValue.Name = "lbl_humidityValue";
             this.lbl_humidityValue.Size = new System.Drawing.Size(38, 20);
             this.lbl_humidityValue.TabIndex = 17;
@@ -341,11 +352,16 @@
             this.lbl_gasesValue.AutoSize = true;
             this.lbl_gasesValue.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbl_gasesValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(204)))), ((int)(((byte)(6)))));
-            this.lbl_gasesValue.Location = new System.Drawing.Point(156, 557);
+            this.lbl_gasesValue.Location = new System.Drawing.Point(154, 558);
             this.lbl_gasesValue.Name = "lbl_gasesValue";
             this.lbl_gasesValue.Size = new System.Drawing.Size(30, 20);
             this.lbl_gasesValue.TabIndex = 22;
             this.lbl_gasesValue.Text = "No";
+            // 
+            // tmr_radar
+            // 
+            this.tmr_radar.Interval = 10000;
+            this.tmr_radar.Tick += new System.EventHandler(this.tmr_radar_Tick);
             // 
             // Frm_Main
             // 
@@ -412,6 +428,8 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lbl_gasesValue;
+        private System.Windows.Forms.Timer tmr_radar;
+        private System.Windows.Forms.Timer tmr_;
     }
 }
 

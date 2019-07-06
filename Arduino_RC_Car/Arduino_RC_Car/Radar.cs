@@ -60,6 +60,8 @@ namespace Arduino_RC_Car
             //graphics
             g = Graphics.FromImage(bmp);
 
+            Color colorOfHand = Color.Green;
+
             //calculate x, y coordinate of HAND
             int tu = (u - lim) % 360;
 
@@ -98,10 +100,40 @@ namespace Arduino_RC_Car
             //draw perpendicular line
             g.DrawLine(p, new Point(cx, 0), new Point(cx, HEIGHT)); // UP-DOWN
             g.DrawLine(p, new Point(0, cy), new Point(WIDTH, cy)); //LEFT-RIGHT
-
+            
             //draw HAND
             g.DrawLine(new Pen(Color.FromArgb(33, 34, 36), 1f), new Point(cx, cy), new Point(tx, ty));
             g.DrawLine(new Pen(Color.Green, 1f), new Point(cx, cy), new Point(x, y));
+            
+            bool isCleared = true;
+            if (Frm_Main.Distance > 0)
+            {
+                for (int i = 0; i > -5; i--)
+                {
+                    
+                    g.DrawLine(new Pen(Color.Red), new Point(cx, 0), new Point(cx-i, HEIGHT));
+                    isCleared = false;
+                }
+                
+
+            }
+            else
+            {
+                if(isCleared == false)
+                for (int i = 0; i > -20; i--)
+                {
+                    g.DrawLine(new Pen(Color.FromArgb(33, 34, 36)), new Point(cx, 0), new Point(cx - i, HEIGHT));
+                    isCleared = true;
+                }
+            }
+            //graphics.Dispose();
+            //else //if(Frm_Main.Distance >0 && Frm_Main.Distance < 8)
+            //{
+            //    colorOfHand = Color.Red;
+            //    g.DrawLine(new Pen(Color.Red, 1f), new Point(cx, cy), new Point(tx, ty));
+            //    //g.DrawLine(new Pen(Color.Green, 1f), new Point(cx, cy), new Point(x, y));
+            //}
+
 
             //load bitmap in picturebox1
             pictureBox1.Image = bmp;

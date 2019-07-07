@@ -298,9 +298,9 @@
             this.lbl_tempValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(204)))), ((int)(((byte)(6)))));
             this.lbl_tempValue.Location = new System.Drawing.Point(74, 502);
             this.lbl_tempValue.Name = "lbl_tempValue";
-            this.lbl_tempValue.Size = new System.Drawing.Size(34, 20);
+            this.lbl_tempValue.Size = new System.Drawing.Size(41, 20);
             this.lbl_tempValue.TabIndex = 16;
-            this.lbl_tempValue.Text = "30C";
+            this.lbl_tempValue.Text = "NaN";
             // 
             // lbl_humidityValue
             // 
@@ -309,9 +309,9 @@
             this.lbl_humidityValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(204)))), ((int)(((byte)(6)))));
             this.lbl_humidityValue.Location = new System.Drawing.Point(103, 531);
             this.lbl_humidityValue.Name = "lbl_humidityValue";
-            this.lbl_humidityValue.Size = new System.Drawing.Size(38, 20);
+            this.lbl_humidityValue.Size = new System.Drawing.Size(41, 20);
             this.lbl_humidityValue.TabIndex = 17;
-            this.lbl_humidityValue.Text = "80%";
+            this.lbl_humidityValue.Text = "NaN";
             // 
             // button2
             // 

@@ -105,11 +105,11 @@ namespace Arduino_RC_Car
         //bluetooth button
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(communicator.serialPort.PortName);
+            //MessageBox.Show(communicator.serialPort.PortName);
             communicator.Start();
             if (communicator.serialPort.IsOpen)
             {
-                MessageBox.Show("connected");
+                //MessageBox.Show("connected");
                 lbl_status.Location = new Point((638 / 2) - 75, 59); //so it can be in the middle
                 lbl_status.ForeColor = Color.FromArgb(0,122,204);
                 lbl_status.Text = "Connected successfully";
